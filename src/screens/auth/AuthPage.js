@@ -7,10 +7,8 @@ import {
   View,
   Text,
   Button,
-
   TextInput,
 } from 'react-native';
-
 
 const AuthPage = inject('auth')(
   observer((props) => {

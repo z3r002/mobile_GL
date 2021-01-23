@@ -1,5 +1,6 @@
 import {action, makeObservable, observable} from 'mobx';
 import Network from '../../services/Network';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AuthStore {
   constructor() {
@@ -42,15 +43,17 @@ class AuthStore {
       };
       const response = await Network('users/login', 'POST', body);
       console.log(response);
-      //  await AsyncStorage.setItem('token', response.id);
+      await AsyncStorage.setItem('token', response.id);
+      const tok = await AsyncStorage.getItem('token');
+      console.log(tok);
     } catch (e) {
       console.log(e);
     }
   };
 
   @action
-  logOut = () => {
-    // AsyncStorage.removeItem('token');
+  logOut = async () => {
+    await AsyncStorage.removeItem('token');
   };
 }
 

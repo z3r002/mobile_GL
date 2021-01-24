@@ -1,45 +1,45 @@
 import {inject, observer} from 'mobx-react';
-import React from 'react';
-
 import {
+  Button,
   SafeAreaView,
   StyleSheet,
-  View,
   Text,
-  Button,
-  TouchableOpacity,
   TextInput,
+  View,
 } from 'react-native';
+import React from 'react';
 
-const AuthPage = inject('auth')(
+export const RegPage = inject('auth')(
   observer((props) => {
     const Input = (name, type = 'text') => (
       <TextInput
         value={props.auth.valuesAuth[name]}
         onChangeText={(value) => props.auth.setValues(name, value)}
         type={type}
+        style={styles.input}
         placeholder={name}
       />
     );
-
     return (
       <>
         <SafeAreaView>
           <View style={styles.main}>
             <View>
-              <Text>Авторизируйтесь</Text>
+              <Text>Зарегистрируйтесь</Text>
             </View>
 
             {Input('email')}
+            {Input('username')}
             {Input('password')}
+
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 1, marginRight: 10}}>
-                <Button title="Войти" onPress={props.auth.sendAuth} />
+                <Button title="регистрация" onPress={props.auth.sendAuth} />
               </View>
               <View style={{flex: 1}}>
                 <Button
-                  title="Еще нет аккаунта?"
-                  onPress={() => props.navigation.navigate('RegPage')}
+                  title="уже есть аккаунт?"
+                  onPress={() => props.navigation.navigate('AuthPage')}
                 />
               </View>
             </View>
@@ -49,7 +49,7 @@ const AuthPage = inject('auth')(
     );
   }),
 );
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   main: {
     marginTop: 25,
     marginRight: 'auto',
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthPage;
+export default RegPage;

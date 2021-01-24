@@ -34,7 +34,14 @@ const AuthPage = inject('auth')(
             {Input('password')}
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 1, marginRight: 10}}>
-                <Button title="Войти" onPress={props.auth.sendAuth} />
+                <Button
+                  title="Войти"
+                  onPress={() => {
+                    props.auth
+                      .sendAuth()
+                      .finally(() => props.navigation.replace('CheckAuthPage'));
+                  }}
+                />
               </View>
               <View style={{flex: 1}}>
                 <Button

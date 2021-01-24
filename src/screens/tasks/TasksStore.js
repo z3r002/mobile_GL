@@ -26,25 +26,25 @@ class TasksStore {
       console.log(e);
     }
   };
-  @action editTodo = async (todo, event) => {
-    const valueEdit = prompt(
-      'Измените заметку',
-      (this.beforeEditCache = todo.body),
-    );
-    if (valueEdit != null) {
-      try {
-        let body = {
-          body: valueEdit,
-        };
-        const response = await Network(`tasks/${todo.id}`, 'PATCH', body);
-
-        this.tasks = this.tasks.filter((task) => task.id !== todo.id);
-        this.tasks = [...this.tasks, response];
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
+  // @action editTodo = async (todo, event) => {
+  //   const valueEdit = prompt(
+  //     'Измените заметку',
+  //     (this.beforeEditCache = todo.body),
+  //   );
+  //   if (valueEdit != null) {
+  //     try {
+  //       let body = {
+  //         body: valueEdit,
+  //       };
+  //       const response = await Network(`tasks/${todo.id}`, 'PATCH', body);
+  //
+  //       this.tasks = this.tasks.filter((task) => task.id !== todo.id);
+  //       this.tasks = [...this.tasks, response];
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+  // };
 
   @action
   deleteTodo = async (todo) => {

@@ -6,6 +6,7 @@ class AuthStore {
   constructor() {
     makeObservable(this);
   }
+  @observable isAuth = false;
 
   @observable valuesAuth = {
     email: '',
@@ -15,6 +16,11 @@ class AuthStore {
 
   @action setValues = (name, value) => {
     this.valuesAuth[name] = value;
+  };
+  @action
+  check = async () => {
+    const token = await AsyncStorage.getItem('token');
+    this.isAuth = !!token;
   };
 
   @action
@@ -32,8 +38,7 @@ class AuthStore {
     }
   };
   @action
-  sendAuth = async (event) => {
-    event.preventDefault();
+  sendAuth = async () => {
     //taskkill /F /IM node.exe  react-native start --reset-cache
 
     try {

@@ -1,5 +1,6 @@
 import {action, makeObservable, observable} from 'mobx';
 import Network from '../../services/Network';
+import prompt from 'react-native-prompt-android';
 
 class TasksStore {
   constructor() {
@@ -26,25 +27,40 @@ class TasksStore {
       console.log(e);
     }
   };
-  // @action editTodo = async (todo, event) => {
-  //   const valueEdit = prompt(
-  //     'Измените заметку',
-  //     (this.beforeEditCache = todo.body),
-  //   );
-  //   if (valueEdit != null) {
-  //     try {
-  //       let body = {
-  //         body: valueEdit,
-  //       };
-  //       const response = await Network(`tasks/${todo.id}`, 'PATCH', body);
-  //
-  //       this.tasks = this.tasks.filter((task) => task.id !== todo.id);
-  //       this.tasks = [...this.tasks, response];
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-  // };
+  @action editTodo = async (todo, event) => {
+    prompt(
+      'Измените заметку',
+      '',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async (value) => {
+            try {
+              let body = {
+                body: value,
+              };
+              const response = await Network(`tasks/${todo.id}`, 'PATCH', body);
+
+              this.tasks = this.tasks.filter((task) => task.id !== todo.id);
+              this.tasks = [...this.tasks, response];
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ],
+      {
+        type: 'text',
+        cancelable: false,
+        defaultValue: (this.beforeEditCache = todo.body),
+      },
+    );
+  };
 
   @action
   deleteTodo = async (todo) => {
@@ -61,19 +77,39 @@ class TasksStore {
   };
 
   @action
-  sendTodo = async () => {
-    try {
-      let body = {
-        title: 'something',
-        body: this.addInput,
-        done: false,
-      };
-      const response = await Network('tasks', 'POST', body);
-      this.tasks = [...this.tasks, response];
-      this.addInput = '';
-    } catch (e) {
-      console.log(e);
-    }
+  sendTodo = async (todo) => {
+    prompt(
+      'Добавьте заметку',
+      '',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async (value) => {
+            try {
+              let body = {
+                title: 'something',
+                body: value,
+                done: false,
+              };
+              const response = await Network('tasks', 'POST', body);
+              this.tasks = [...this.tasks, response];
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ],
+      {
+        type: 'text',
+        cancelable: false,
+        defaultValue: (this.beforeEditCache = todo.body),
+      },
+    );
   };
 
   @action loadTasks = () => {

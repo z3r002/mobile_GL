@@ -7,9 +7,11 @@ import {
   Text,
   View,
   CheckBox,
+  TouchableOpacity,
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native';
+import prompt from 'react-native-prompt-android';
 
 export const TaskPage = inject('tasks')(
   observer((props) => {
@@ -22,7 +24,7 @@ export const TaskPage = inject('tasks')(
       return (
         <TouchableWithoutFeedback
           key={item.id?.toString()}
-          onPress={() => press(item)}
+          onPress={() => props.tasks.editTodo(item)}
           style={styles.element}>
           <View
             style={{
@@ -49,7 +51,7 @@ export const TaskPage = inject('tasks')(
     };
 
     const press = (item) => {
-      props.navigation.navigate('AuthPage');
+      //props.navigation.navigate('AuthPage');
     };
     if (props.tasks.loader) {
       return (
@@ -63,14 +65,33 @@ export const TaskPage = inject('tasks')(
       );
     } else {
       return (
-        <View style={styles.container}>
-          {console.log(props.tasks.tasks)}
-          <FlatList
-            data={props.tasks.tasks}
-            renderItem={renderItem}
-            numColumns={1}
-          />
-        </View>
+        <>
+          <View style={styles.container}>
+            {console.log(props.tasks.tasks)}
+            <FlatList
+              data={props.tasks.tasks}
+              renderItem={renderItem}
+              numColumns={1}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={(item) => props.tasks.sendTodo(item)}
+            style={{
+              borderWidth: 1,
+              borderColor: 'rgba(0,0,0,0.2)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 60,
+              position: 'absolute',
+              bottom: 40,
+              right: 20,
+              height: 60,
+              backgroundColor: '#32CD32',
+              borderRadius: 100,
+            }}>
+            <Text style={{size: 10, fontWeight: 'bold'}}>+</Text>
+          </TouchableOpacity>
+        </>
       );
     }
 

@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
   View,
+  CheckBox,
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -23,12 +24,30 @@ export const TaskPage = inject('tasks')(
           key={item.id?.toString()}
           onPress={() => press(item)}
           style={styles.element}>
-          <View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              margin: 10,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: '#9ff5d3',
+            }}>
+            <CheckBox
+              value={item.done}
+              onValueChange={(event) => props.tasks.checkTodo(item, event)}
+            />
+
             <Text>{item.body}</Text>
+            <TouchableWithoutFeedback
+              onPress={() => props.tasks.deleteTodo(item)}>
+              <Text style={{fontWeight: 'bold'}}>X</Text>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       );
     };
+
     const press = (item) => {
       props.navigation.navigate('AuthPage');
     };

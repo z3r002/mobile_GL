@@ -27,6 +27,7 @@ class TasksStore {
       console.log(e);
     }
   };
+
   @action editTodo = async (todo, event) => {
     prompt(
       'Измените заметку',

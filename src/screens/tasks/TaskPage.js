@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {inject, observer} from 'mobx-react';
+import {inject, observer, Provider} from 'mobx-react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -11,21 +11,36 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native';
-import prompt from 'react-native-prompt-android';
+import {NavigationContainer} from '@react-navigation/native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import AuthPage from '../auth/AuthPage';
+
+//const Drawer = createDrawerNavigator();
+
+// function MyDrawer() {
+//   return (
+//     <Drawer.Navigator
+//       drawerContentOptions={{
+//         activeTintColor: '#e91e63',
+//         itemStyle: {marginVertical: 30},
+//       }}>
+//       <Drawer.Screen name="Logout" component={AuthPage} />
+//     </Drawer.Navigator>
+//   );
+// }
 
 export const TaskPage = inject('tasks')(
   observer((props) => {
     useEffect(() => {
-      props.tasks.loadTasks();
+      console.log(props.tasks.tasks.length);
+      if (!props.tasks.tasks.length) {
+        props.tasks.loadTasks();
+      }
     }, [props]);
 
     const renderItem = ({item}) => {
-      console.log(item);
       return (
-        <TouchableWithoutFeedback
-          key={item.id?.toString()}
-          onPress={() => props.tasks.editTodo(item)}
-          style={styles.element}>
+        <View key={item.id?.toString()} style={styles.element}>
           <View
             style={{
               flex: 1,
@@ -37,22 +52,18 @@ export const TaskPage = inject('tasks')(
             }}>
             <CheckBox
               value={item.done}
-              onValueChange={(event) => props.tasks.checkTodo(item, event)}
+              onValueChange={() => props.tasks.checkTodo(item)}
             />
 
-            <Text>{item.body}</Text>
-            <TouchableWithoutFeedback
-              onPress={() => props.tasks.deleteTodo(item)}>
+            <Text onPress={() => props.tasks.editTodo(item)}>{item.body}</Text>
+            <TouchableOpacity onPress={() => props.tasks.deleteTodo(item)}>
               <Text style={{fontWeight: 'bold'}}>X</Text>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       );
     };
 
-    const press = (item) => {
-      //props.navigation.navigate('AuthPage');
-    };
     if (props.tasks.loader) {
       return (
         <View style={styles.container}>
@@ -89,52 +100,11 @@ export const TaskPage = inject('tasks')(
               backgroundColor: '#32CD32',
               borderRadius: 100,
             }}>
-            <Text style={{size: 10, fontWeight: 'bold'}}>+</Text>
+            <Text style={{fontWeight: 'bold'}}>+</Text>
           </TouchableOpacity>
         </>
       );
     }
-
-    // if (props.tasks.loader) {
-    //   return <ActivityIndicator size="large" />;
-    // } else {
-    //   return (
-    //     <View className="tasks">
-    //       <View className="test">
-    //         <TextInput
-    //           value={props.tasks.addInput}
-    //           name="addInput"
-    //           onChange={(value) => props.tasks.setAddInput(value)}
-    //           type="text"
-    //           className="addInput"
-    //           placeholder="Напишите свою задачу..."
-    //         />
-    //         <Text onClick={props.tasks.sendTodo} className="addButton">
-    //           +
-    //         </Text>
-    //       </View>
-    //
-    //       {props.tasks.tasks.map((todo) => (
-    //         <View
-    //           key={todo.id}
-    //           onDoubleClick={(event) => props.tasks.editTodo(todo, event)}
-    //           className="item">
-    //           <TextInput
-    //             type="checkbox"
-    //             checked={todo.done}
-    //             onChange={(event) => props.tasks.checkTodo(todo, event)}
-    //           />
-    //           {todo.body}
-    //           <View
-    //             onClick={() => props.tasks.deleteTodo(todo)}
-    //             className="trash">
-    //             X
-    //           </View>
-    //         </View>
-    //       ))}
-    //     </View>
-    //   );
-    // }
   }),
 );
 const styles = StyleSheet.create({

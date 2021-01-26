@@ -1,18 +1,24 @@
-import {action, makeObservable, observable} from 'mobx';
+import {action, computed, makeObservable, observable} from 'mobx';
 import Network from '../../services/Network';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AuthStore {
   constructor() {
     makeObservable(this);
+    this.getUsername();
   }
   @observable isAuth = false;
+
+  @observable username = '';
 
   @observable valuesAuth = {
     email: '',
     username: '',
     password: '',
   };
+
+  @action getUsername = async () =>
+    (this.username = await AsyncStorage.getItem('username'));
 
   @action setValues = (name, value) => {
     this.valuesAuth[name] = value;
@@ -21,6 +27,11 @@ class AuthStore {
   check = async () => {
     const token = await AsyncStorage.getItem('token');
     this.isAuth = !!token;
+  };
+
+  @action
+  logout = async () => {
+    return AsyncStorage.removeItem('token');
   };
 
   @action
@@ -37,10 +48,9 @@ class AuthStore {
       console.log(e);
     }
   };
+
   @action
   sendAuth = async () => {
-    //taskkill /F /IM node.exe  react-native start --reset-cache
-
     try {
       let body = {
         email: this.valuesAuth.email,
@@ -49,6 +59,7 @@ class AuthStore {
       const response = await Network('users/login', 'POST', body);
       console.log(response);
       await AsyncStorage.setItem('token', response.id);
+      await AsyncStorage.setItem('username', this.valuesAuth.email);
       const tok = await AsyncStorage.getItem('token');
       console.log(tok);
     } catch (e) {

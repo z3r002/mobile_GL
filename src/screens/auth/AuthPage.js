@@ -7,7 +7,6 @@ import {
   View,
   Text,
   Button,
-  TouchableOpacity,
   TextInput,
 } from 'react-native';
 

@@ -8,6 +8,13 @@ import RegPage from './screens/auth/RegPage';
 import {TaskPage} from './screens/tasks/TaskPage';
 import TasksStore from './screens/tasks/TasksStore';
 import CheckAuthPage from './screens/auth/CheckAuthPage';
+import {configure} from 'mobx';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import CustomDrawer from './components/CustomDrawer';
+
+configure({
+  enforceActions: 'never',
+});
 
 const stores = {
   auth: AuthStore,
@@ -15,6 +22,12 @@ const stores = {
 };
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+const MyDrawer = () => (
+  <Drawer.Navigator drawerContent={(props) => <CustomDrawer {...props} />}>
+    <Drawer.Screen name="TaskPage" component={TaskPage} />
+  </Drawer.Navigator>
+);
 
 const App: () => React$Node = () => {
   return (
@@ -40,6 +53,11 @@ const App: () => React$Node = () => {
             <Stack.Screen
               name="TaskPage"
               component={TaskPage}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Main"
+              component={MyDrawer}
               options={{headerShown: false}}
             />
           </Stack.Navigator>

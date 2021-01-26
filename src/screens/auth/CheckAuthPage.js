@@ -6,7 +6,7 @@ const CheckAuthPage = inject('auth')(
   observer((props) => {
     props.auth.check().finally(() => {
       if (props.auth.isAuth) {
-        props.navigation.replace('TaskPage');
+        props.navigation.replace('Main');
       } else {
         props.navigation.replace('AuthPage');
       }

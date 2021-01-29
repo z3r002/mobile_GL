@@ -11,7 +11,7 @@ const CustomDrawer = inject('auth')((props) => {
         onPress={() => {
           props.auth
             .logout()
-            .finally(() => props.navigation.navigate('AuthPage'));
+            .finally(() => props.navigation.navigate('AuthUniversalAuth'));
         }}>
         Logout
       </Text>

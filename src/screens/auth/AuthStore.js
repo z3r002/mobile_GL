@@ -1,6 +1,8 @@
 import {action, computed, makeObservable, observable} from 'mobx';
 import Network from '../../services/Network';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
+import ErrorAlert from '../../components/ErrorAlert';
 
 class AuthStore {
   constructor() {
@@ -13,7 +15,6 @@ class AuthStore {
 
   @observable valuesAuth = {
     email: '',
-    username: '',
     password: '',
   };
 
@@ -35,15 +36,17 @@ class AuthStore {
   };
 
   @action
-  sendReg = async (event) => {
-    event.preventDefault();
+  sendReg = async () => {
     try {
       let body = {
-        username: this.valuesAuth.username,
         email: this.valuesAuth.email,
         password: this.valuesAuth.password,
       };
-      await Network('users', 'POST', body);
+      const response = await Network('users', 'POST', body);
+      console.log('REG', response);
+      if (!response.ok) {
+        ErrorAlert(response);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -57,19 +60,22 @@ class AuthStore {
         password: this.valuesAuth.password,
       };
       const response = await Network('users/login', 'POST', body);
-      console.log(response);
-      await AsyncStorage.setItem('token', response.id);
-      await AsyncStorage.setItem('username', this.valuesAuth.email);
-      const tok = await AsyncStorage.getItem('token');
-      console.log(tok);
+      if (response?.id) {
+        await AsyncStorage.setItem('token', response?.id);
+        await AsyncStorage.setItem('username', this.valuesAuth.email);
+      } else {
+        ErrorAlert(response);
+      }
     } catch (e) {
-      console.log(e);
+      console.log('STORE', e);
+      return e;
     }
   };
 
   @action
   logOut = async () => {
     await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('username');
   };
 }
 

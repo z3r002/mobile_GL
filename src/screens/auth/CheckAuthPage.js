@@ -8,7 +8,7 @@ const CheckAuthPage = inject('auth')(
       if (props.auth.isAuth) {
         props.navigation.replace('Main');
       } else {
-        props.navigation.replace('AuthPage');
+        props.navigation.replace('AuthUniversalAuth');
       }
     });
 

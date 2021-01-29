@@ -6,7 +6,7 @@ const Network = async (url, method, body) => {
   console.log('fetch', url, method);
 
   return fetch(
-    `http://172.20.10.5:3000/api/${url}${
+    `http://192.168.0.108:3001/api/${url}${
       token ? `?access_token=${token}` : ''
     }`,
     {
@@ -19,7 +19,8 @@ const Network = async (url, method, body) => {
   )
     .then((res) => res.json())
     .catch((error) => {
-      console.error(error);
+      console.log('NETWOTKSERVICE', error);
+      return error;
     });
 };
 export default Network;

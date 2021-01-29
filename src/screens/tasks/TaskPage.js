@@ -9,25 +9,7 @@ import {
   CheckBox,
   TouchableOpacity,
   FlatList,
-  TouchableWithoutFeedback,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import AuthPage from '../auth/AuthPage';
-
-//const Drawer = createDrawerNavigator();
-
-// function MyDrawer() {
-//   return (
-//     <Drawer.Navigator
-//       drawerContentOptions={{
-//         activeTintColor: '#e91e63',
-//         itemStyle: {marginVertical: 30},
-//       }}>
-//       <Drawer.Screen name="Logout" component={AuthPage} />
-//     </Drawer.Navigator>
-//   );
-// }
 
 export const TaskPage = inject('tasks')(
   observer((props) => {
